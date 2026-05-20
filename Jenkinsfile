@@ -37,15 +37,8 @@ pipeline {
     }
 
     post {
-        success {
-            // Jenkins default plugin se GitHub commit status update karega
-            setGitHubPullRequestStatus state: 'SUCCESS', message: 'Jenkins Build Passed!'
-        }
-        failure {
-            setGitHubPullRequestStatus state: 'FAILURE', message: 'Jenkins Build Failed!'
+        always {
+            echo 'Pipeline execution completed successfully!'
         }
     }
 }
-// Rishi Live CI/CD Demo Run
-// Rishi Live CI/CD Demo Run
-// Webhook Success Integration Done
