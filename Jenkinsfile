@@ -16,7 +16,6 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh 'terraform init'
-                    // Yeh code ko check karega aur bina AWS login ke green ho jayega
                     sh 'terraform validate'
                 }
             }
@@ -24,8 +23,9 @@ pipeline {
 
         stage('Docker Build & Deploy') {
             steps {
-                sh 'sudo docker compose down'
-                sh 'sudo docker compose up -d --build'
+                // Yahan space ki jagah hyphen (-) laga diya hai
+                sh 'sudo docker-compose down || true'
+                sh 'sudo docker-compose up -d --build'
             }
         }
 
