@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         GITHUB_URL = 'https://github.com/RISHIKUMAR206/three-tier-web-applications.git'
     }
@@ -23,8 +23,7 @@ pipeline {
 
         stage('Docker Build & Deploy') {
             steps {
-                // Agar pehle se koi conflict wala container hai toh use forced remove karega
-                sh 'sudo docker rm -f employee-mysql employee-frontend employee-backend employee-nginx || true'
+                sh 'sudo docker rm -f employee-mysql employee-frontend employee-backend || true'
                 sh 'sudo docker-compose down || true'
                 sh 'sudo docker-compose up -d --build'
             }
