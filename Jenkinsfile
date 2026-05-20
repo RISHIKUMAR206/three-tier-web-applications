@@ -16,7 +16,8 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh 'terraform init'
-                    sh 'terraform apply --auto-approve'
+                    // Yahan humne automatic password pass kar diya hai
+                    sh 'terraform apply --auto-approve -var="db_password=RishiPassword123"'
                 }
             }
         }
