@@ -2,7 +2,7 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-# 1. WSL se connect karne ke liye SSH Key Pair generate karna
+# 1. WSL se connect karne ke liye SSH Key Pair
 resource "aws_key_pair" "rishi_key" {
   key_name   = "rishi-aws-key"
   public_key = file("~/.ssh/id_rsa.pub")
