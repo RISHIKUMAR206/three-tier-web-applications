@@ -23,7 +23,8 @@ pipeline {
 
         stage('Docker Build & Deploy') {
             steps {
-                // Yahan space ki jagah hyphen (-) laga diya hai
+                // Agar pehle se koi conflict wala container hai toh use forced remove karega
+                sh 'sudo docker rm -f employee-mysql employee-frontend employee-backend employee-nginx || true'
                 sh 'sudo docker-compose down || true'
                 sh 'sudo docker-compose up -d --build'
             }
