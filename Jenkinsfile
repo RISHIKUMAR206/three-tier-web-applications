@@ -23,7 +23,7 @@ pipeline {
 
         stage('Docker Build & Deploy') {
             steps {
-                sh 'sudo docker rm -f employee-mysql employee-frontend employee-backend || true'
+                sh 'sudo docker rm -f employee-mysql employee-frontend employee-backend employee-nginx || true'
                 sh 'sudo docker-compose down || true'
                 sh 'sudo docker-compose up -d --build'
             }
