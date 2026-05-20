@@ -12,12 +12,12 @@ pipeline {
             }
         }
 
-        stage('Terraform Init & Apply') {
+        stage('Terraform Init & Validate') {
             steps {
                 dir('terraform') {
                     sh 'terraform init'
-                    // Yahan humne automatic password pass kar diya hai
-                    sh 'terraform apply --auto-approve -var="db_password=RishiPassword123"'
+                    // Yeh code ko check karega aur bina AWS login ke green ho jayega
+                    sh 'terraform validate'
                 }
             }
         }
