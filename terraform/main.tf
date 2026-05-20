@@ -1,8 +1,14 @@
 provider "aws" {
-  region = "ap-south-1" # Mumbai Region
+  region = "ap-south-1"
 }
 
-# Web aur SSH traffic ke liye Security Group
+# 1. WSL se connect karne ke liye SSH Key Pair generate karna
+resource "aws_key_pair" "rishi_key" {
+  key_name   = "rishi-aws-key"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
+# 2. Security Group Ports (80, 22, 5000)
 resource "aws_security_group" "rishi_sg" {
   name        = "rishi-3-tier-sg"
   description = "Allow inbound traffic for 3-tier project"
@@ -21,6 +27,13 @@ resource "aws_security_group" "rishi_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -29,10 +42,11 @@ resource "aws_security_group" "rishi_sg" {
   }
 }
 
-# Mumbai me chalne wala t3.micro EC2 Instance
+# 3. AWS Instance with Key Pair
 resource "aws_instance" "rishi_server" {
-  ami           = "ami-007020fd9c84e18c7" # Ubuntu Server 24.04 LTS (ap-south-1)
-  instance_type = "t3.micro"              # Mumbai free tier eligible
+  ami           = "ami-007020fd9c84e18c7"
+  instance_type = "t3.micro"
+  key_name      = aws_key_pair.rishi_key.key_name
   security_groups = [aws_security_group.rishi_sg.name]
 
   tags = {
