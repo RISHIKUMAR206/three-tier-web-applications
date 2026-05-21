@@ -2,13 +2,7 @@ provider "aws" {
   region = "ap-south-1"
 }
 
-# 1. WSL se connect karne ke liye SSH Key Pair
-resource "aws_key_pair" "rishi_key" {
-  key_name   = "rishi-aws-key"
-  public_key = file("~/.ssh/id_rsa.pub")
-}
-
-# 2. Security Group Ports (80, 22, 5000)
+# Security Group
 resource "aws_security_group" "rishi_sg" {
   name        = "rishi-3-tier-sg"
   description = "Allow inbound traffic for 3-tier project"
@@ -42,11 +36,11 @@ resource "aws_security_group" "rishi_sg" {
   }
 }
 
-# 3. AWS Instance with Key Pair
+# AWS Instance
 resource "aws_instance" "rishi_server" {
-  ami           = "ami-007020fd9c84e18c7"
-  instance_type = "t3.micro"
-  key_name      = aws_key_pair.rishi_key.key_name
+  ami             = "ami-007020fd9c84e18c7"
+  instance_type   = "t3.micro"
+  key_name        = "project-key" 
   security_groups = [aws_security_group.rishi_sg.name]
 
   tags = {
@@ -54,6 +48,17 @@ resource "aws_instance" "rishi_server" {
   }
 }
 
+# Permanent Elastic IP Allocation (Zindagi bhar ke liye fixed IP)
+resource "aws_eip" "rishi_static_ip" {
+  instance = aws_instance.rishi_server.id
+  domain   = "vpc"
+}
+
+# Outputs for Jenkins & Review
 output "instance_public_ip" {
   value = aws_instance.rishi_server.public_ip
+}
+
+output "elastic_ip" {
+  value = aws_eip.rishi_static_ip.public_ip
 }
