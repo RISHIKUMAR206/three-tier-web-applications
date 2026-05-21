@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GITHUB_URL = 'https://github.com/RISHIKUMAR206/three-tier-web-applications.git'
+        AWS_IP     = '13.206.251.228'
     }
 
     stages {
@@ -21,17 +22,18 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Deploy') {
+        stage('Docker Deploy to AWS') {
             steps {
-                sh 'sudo docker rm -f employee-mysql employee-frontend employee-backend employee-nginx || true'
-                sh 'sudo docker-compose down || true'
-                sh 'sudo docker-compose up -d --build'
+                // AWS server par purane containers stop karke direct fast mode me up karega
+                sh "ssh ubuntu@${AWS_IP} 'cd three-tier-web-applications && sudo docker-compose down || true'"
+                sh "ssh ubuntu@${AWS_IP} 'cd three-tier-web-applications && sudo docker-compose up -d'"
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Verify AWS Deployment') {
             steps {
-                sh 'sudo docker ps'
+                // Teacher ko proof dikhane ke liye AWS ke containers ka status pull karega
+                sh "ssh ubuntu@${AWS_IP} 'sudo docker ps'"
             }
         }
     }
