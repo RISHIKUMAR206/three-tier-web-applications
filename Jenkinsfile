@@ -4,7 +4,7 @@ pipeline {
     environment {
         GITHUB_URL = 'https://github.com/RISHIKUMAR206/three-tier-web-applications.git'
         AWS_IP     = '52.66.123.183'
-        SSH_KEY    = '/tmp/project-key.pem' // <-- Bas ye line badal do
+        SSH_KEY    = '/var/lib/jenkins/secrets/keys/project-key.pem' // <-- Naya fixed address
     }
 
     stages {
