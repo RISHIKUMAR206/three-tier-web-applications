@@ -3,12 +3,13 @@ pipeline {
 
     environment {
         GITHUB_URL = 'https://github.com/RISHIKUMAR206/three-tier-web-applications.git'
-        AWS_IP     = '13.206.251.228'
+        AWS_IP     = '52.66.123.183'  // <-- Tumhara permanent Elastic IP yahan lock kar diya hai
     }
 
     stages {
         stage('Checkout Code') {
             steps {
+                cleanWs() // Har baar workspace clear karega taaki @2 wala panga na ho
                 git credentialsId: 'github-creds', url: "${GITHUB_URL}", branch: 'main'
             }
         }
@@ -24,16 +25,15 @@ pipeline {
 
         stage('Docker Deploy to AWS') {
             steps {
-                // AWS server par purane containers stop karke direct fast mode me up karega
-                sh "ssh ubuntu@${AWS_IP} 'cd three-tier-web-applications && sudo docker-compose down || true'"
-                sh "ssh ubuntu@${AWS_IP} 'cd three-tier-web-applications && sudo docker-compose up -d'"
+                // Bina fingerprints ke secure login karke containers up-down karega
+                sh "ssh -o StrictHostKeyChecking=no ubuntu@${AWS_IP} 'cd three-tier-web-applications && sudo docker-compose down || true'"
+                sh "ssh -o StrictHostKeyChecking=no ubuntu@${AWS_IP} 'cd three-tier-web-applications && sudo docker-compose up -d'"
             }
         }
 
         stage('Verify AWS Deployment') {
             steps {
-                // Teacher ko proof dikhane ke liye AWS ke containers ka status pull karega
-                sh "ssh ubuntu@${AWS_IP} 'sudo docker ps'"
+                sh "ssh -o StrictHostKeyChecking=no ubuntu@${AWS_IP} 'sudo docker ps'"
             }
         }
     }
