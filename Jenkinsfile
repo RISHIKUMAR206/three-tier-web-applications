@@ -4,7 +4,7 @@ pipeline {
     environment {
         GITHUB_URL = 'https://github.com/RISHIKUMAR206/three-tier-web-applications.git'
         AWS_IP     = '52.66.123.183'
-        SSH_KEY    = '/home/acer/rishi-3-tier-project/terraform/project-key.pem' // <-- Chaabi ka sahi rasta set kar diya
+        SSH_KEY    = '/tmp/project-key.pem' // <-- Bas ye line badal do
     }
 
     stages {
